@@ -1,0 +1,38 @@
+
+package com.example.WebsiteMHiepBe.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.sql.Timestamp;
+
+@Data
+@Entity
+@Table(name = "review")
+public class Review {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_review")
+    private int idReview;
+
+    @Column(name = "content")
+    private String content;
+
+    @Column(name = "rating_point")
+    private float ratingPoint;
+
+    @Column(name = "timestamp")
+    private Timestamp timestamp;
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "id_plastic_item", nullable = false)
+    private PlasticItem plasticItem;
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "id_user", nullable = false)
+    private User user;
+
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "id_order_detail")
+    private OrderDetail orderDetail;
+}
