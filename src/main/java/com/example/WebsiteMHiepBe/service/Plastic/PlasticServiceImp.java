@@ -18,8 +18,7 @@ public class PlasticServiceImp implements PlasticService{
     private GenreRepository genreRepository;
     @Autowired
     private ImageRepository imageRepository;;
-    @Autowired
-    private Up
+
 
 
 
