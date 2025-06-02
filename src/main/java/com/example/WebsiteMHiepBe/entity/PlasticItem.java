@@ -1,5 +1,7 @@
 package com.example.WebsiteMHiepBe.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -48,6 +50,7 @@ public class PlasticItem {
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "plastic_item_genre", joinColumns = @JoinColumn(name = "id_plastic_item"), inverseJoinColumns = @JoinColumn(name = "id_genre"))
     @Builder.Default
+
     private List<Genre> listGenres = new ArrayList<>();
 
     @OneToMany(mappedBy = "plasticItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

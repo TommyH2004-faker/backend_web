@@ -1,10 +1,14 @@
 package com.example.WebsiteMHiepBe.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "order_detail")
 public class OrderDetail {
     @Id
