@@ -31,5 +31,5 @@ public class Image {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_plastic_item", nullable = false)
-    private PlasticItem plasticItem;
+    private com.example.WebsiteMHiepBe.entity.PlasticItem plasticItem;
 }

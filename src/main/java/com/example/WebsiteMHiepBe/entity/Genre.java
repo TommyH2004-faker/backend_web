@@ -26,5 +26,5 @@ public class Genre {
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "plastic_item_genre", joinColumns = @JoinColumn(name = "id_genre"), inverseJoinColumns = @JoinColumn(name = "id_plastic_item"))
     @JsonIgnore
-    private List<PlasticItem> listPlasticItems;
+    private List<com.example.WebsiteMHiepBe.entity.PlasticItem> listPlasticItems;
 }

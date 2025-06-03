@@ -27,9 +27,9 @@ public class OrderDetail {
 
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "id_plastic_item", nullable = false)
-    private PlasticItem plasticItem;
+    private com.example.WebsiteMHiepBe.entity.PlasticItem plasticItem;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_order", nullable = false)
-    private Order order;
+    private com.example.WebsiteMHiepBe.entity.Order order;
 }

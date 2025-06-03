@@ -27,7 +27,10 @@ public class TaiKhoanController {
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
-
+     @GetMapping("/get-all-users")
+    public ResponseEntity<?> getAllUser() {
+        return userServiceImp.getAllUser();
+    }
     @PostMapping("/register")
     public ResponseEntity<?> register(@Validated @RequestBody User user) throws MessagingException {
         return userServiceImp.register(user);

@@ -51,25 +51,25 @@ public class PlasticItem {
     @JoinTable(name = "plastic_item_genre", joinColumns = @JoinColumn(name = "id_plastic_item"), inverseJoinColumns = @JoinColumn(name = "id_genre"))
     @Builder.Default
 
-    private List<Genre> listGenres = new ArrayList<>();
+    private List<com.example.WebsiteMHiepBe.entity.Genre> listGenres = new ArrayList<>();
 
     @OneToMany(mappedBy = "plasticItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Builder.Default
-    private List<Image> listImages = new ArrayList<>();
+    private List<com.example.WebsiteMHiepBe.entity.Image> listImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "plasticItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Builder.Default
-    private List<Review> listReviews = new ArrayList<>();
+    private List<com.example.WebsiteMHiepBe.entity.Review> listReviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "plasticItem", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @Builder.Default
-    private List<OrderDetail> listOrderDetails = new ArrayList<>();
+    private List<com.example.WebsiteMHiepBe.entity.OrderDetail> listOrderDetails = new ArrayList<>();
 
     @OneToMany(mappedBy = "plasticItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Builder.Default
-    private List<FavoriteItem> listFavoriteItems = new ArrayList<>();
+    private List<com.example.WebsiteMHiepBe.entity.FavoriteItem> listFavoriteItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "plasticItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Builder.Default
-    private List<CartItem> listCartItems = new ArrayList<>();
+    private List<com.example.WebsiteMHiepBe.entity.CartItem> listCartItems = new ArrayList<>();
 }

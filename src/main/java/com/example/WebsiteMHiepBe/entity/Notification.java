@@ -1,5 +1,4 @@
 package com.example.WebsiteMHiepBe.entity;
-
 public class Notification {
     private String message;
 

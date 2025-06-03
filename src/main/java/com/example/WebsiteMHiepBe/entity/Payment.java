@@ -28,5 +28,5 @@ public class Payment {
     private double feePayment;
 
     @OneToMany(mappedBy = "payment", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private List<Order> listOrders;
+    private List<com.example.WebsiteMHiepBe.entity.Order> listOrders;
 }

@@ -50,17 +50,17 @@ public class Order {
     private String note;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderDetail> listOrderDetails;
+    private List<com.example.WebsiteMHiepBe.entity.OrderDetail> listOrderDetails;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_user", nullable = false)
-    private User user;
+    private com.example.WebsiteMHiepBe.entity.User user;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_payment")
-    private Payment payment;
+    private com.example.WebsiteMHiepBe.entity.Payment payment;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_delivery")
-    private Delivery delivery;
+    private com.example.WebsiteMHiepBe.entity.Delivery delivery;
 }
