@@ -23,5 +23,5 @@ public class Role {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id_role"), inverseJoinColumns = @JoinColumn(name = "id_user"))
-    private List<User> listUsers;
+    private List<com.example.WebsiteMHiepBe.entity.User> listUsers;
 }
