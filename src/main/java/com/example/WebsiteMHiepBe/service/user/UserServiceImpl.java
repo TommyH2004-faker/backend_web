@@ -2,7 +2,7 @@ package com.example.WebsiteMHiepBe.service.user;
 
 import com.example.WebsiteMHiepBe.dao.RoleRepository;
 import com.example.WebsiteMHiepBe.dao.UserRepository;
-import com.example.WebsiteMHiepBe.entity.Role;
+
 import com.example.WebsiteMHiepBe.entity.User;
 import com.example.WebsiteMHiepBe.security.JwtRespone;
 import com.example.WebsiteMHiepBe.service.JWT.JwtService;
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserSerVice {
 
 
         user.setEnabled(false);
-        List<Role> roles = new ArrayList<>();
+        List<com.example.WebsiteMHiepBe.entity.Role> roles = new ArrayList<>();
         roles.add(quyenRepository.findBynameRole("CUSTOMER"));
         user.setListRoles(roles);
         user.setActivationCode(taomaTokenKichHoat());
@@ -140,8 +140,8 @@ public class UserServiceImpl implements UserSerVice {
 
             // Set role cho user
             int idRoleRequest = Integer.parseInt(String.valueOf(userJson.get("role")));
-            Optional<Role> role = quyenRepository.findById(idRoleRequest);
-            List<Role> roles = new ArrayList<>();
+            Optional<com.example.WebsiteMHiepBe.entity.Role> role = quyenRepository.findById(idRoleRequest);
+            List<com.example.WebsiteMHiepBe.entity.Role> roles = new ArrayList<>();
             roles.add(role.get());
             user.setListRoles(roles);
 
@@ -291,6 +291,17 @@ public class UserServiceImpl implements UserSerVice {
         return ResponseEntity.ok().build();
     }
 
+    @Override
+    public ResponseEntity<?> getAllUser() {
+        try {
+            List<User> users = nguoiDungRepository.findAll();
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     private void sendEmailForgotPassword(String email, String password) {
         String subject = "Reset mật khẩu";
         String message = "Mật khẩu tạm thời của bạn là: <strong>" + password + "</strong>";
@@ -314,7 +325,7 @@ public class UserServiceImpl implements UserSerVice {
         );
     }
 
-    private Collection<? extends GrantedAuthority> rolesToAuthorities(Collection<Role> quyens) {
+    private Collection<? extends GrantedAuthority> rolesToAuthorities(Collection<com.example.WebsiteMHiepBe.entity.Role> quyens) {
         return quyens.stream()
                 .map(quyen -> new SimpleGrantedAuthority(quyen.getNameRole()))
                 .collect(Collectors.toList());

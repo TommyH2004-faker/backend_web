@@ -15,4 +15,5 @@ public interface UserSerVice extends UserDetailsService {
     public ResponseEntity<?> updateProfile(JsonNode userJson);
     public ResponseEntity<?> forgotPassword(JsonNode jsonNode);
 
+    public  ResponseEntity<?> getAllUser();
 }

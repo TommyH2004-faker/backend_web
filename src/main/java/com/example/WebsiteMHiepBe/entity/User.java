@@ -56,21 +56,21 @@ public class User {
     private String activationCode;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private List<Review> listReviews;
+    private List<com.example.WebsiteMHiepBe.entity.Review> listReviews;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<FavoriteItem> listFavoriteItems;
+    private List<com.example.WebsiteMHiepBe.entity.FavoriteItem> listFavoriteItems;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_role"))
-    private List<Role> listRoles;
+    private List<com.example.WebsiteMHiepBe.entity.Role> listRoles;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private List<Order> listOrders;
+    private List<com.example.WebsiteMHiepBe.entity.Order> listOrders;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<CartItem> listCartItems;
+    private List<com.example.WebsiteMHiepBe.entity.CartItem> listCartItems;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Feedbacks> listFeedbacks;
+    private List<com.example.WebsiteMHiepBe.entity.Feedbacks> listFeedbacks;
 }
