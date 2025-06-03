@@ -30,13 +30,13 @@ public class Review {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_plastic_item", nullable = false)
-    private PlasticItem plasticItem;
+    private com.example.WebsiteMHiepBe.entity.PlasticItem plasticItem;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_user", nullable = false)
-    private User user;
+    private com.example.WebsiteMHiepBe.entity.User user;
 
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "id_order_detail")
-    private OrderDetail orderDetail;
+    private com.example.WebsiteMHiepBe.entity.OrderDetail orderDetail;
 }
