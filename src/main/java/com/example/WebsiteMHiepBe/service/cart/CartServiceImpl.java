@@ -25,7 +25,7 @@ private final ObjectMapper objectMapper ;
         this.objectMapper = objectMapper;
     }
 
-    @Override
+ /*   @Override
     public ResponseEntity<?> save(JsonNode jsonNode) {
         try {
             int idUser = 0;
@@ -67,7 +67,64 @@ private final ObjectMapper objectMapper ;
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
-    }
+    }*/
+ @Override
+ public ResponseEntity<?> save(JsonNode jsonNode) {
+     try {
+         int idUser = 0;
+         List<CartItem> newCartItems = new ArrayList<>();
+
+         // Duyệt dữ liệu từ frontend
+         for (JsonNode itemNode : jsonNode) {
+             idUser = itemNode.get("idUser").asInt();
+             CartItem newItem = objectMapper.treeToValue(itemNode, CartItem.class);
+             newCartItems.add(newItem);
+         }
+
+         Optional<User> optionalUser = userRepository.findById(idUser);
+         if (optionalUser.isEmpty()) {
+             return ResponseEntity.badRequest().body("User không tồn tại");
+         }
+
+         User user = optionalUser.get();
+         List<CartItem> currentCart = user.getListCartItems();
+
+         for (CartItem newItem : newCartItems) {
+             boolean isExist = false;
+             for (CartItem oldItem : currentCart) {
+                 if (oldItem.getPlasticItem().getIdPlasticItem() == newItem.getPlasticItem().getIdPlasticItem()) {
+                     oldItem.setQuantity(oldItem.getQuantity() + newItem.getQuantity());
+                     isExist = true;
+                     break;
+                 }
+             }
+
+             if (!isExist) {
+                 CartItem freshItem = new CartItem();
+                 freshItem.setUser(user);
+                 freshItem.setPlasticItem(newItem.getPlasticItem());
+                 freshItem.setQuantity(newItem.getQuantity());
+                 currentCart.add(freshItem);
+             }
+         }
+
+         user.setListCartItems(currentCart);
+         User savedUser = userRepository.save(user);
+
+         // Nếu thêm mới 1 sản phẩm thì trả về idCart đó
+         if (newCartItems.size() == 1) {
+             List<CartItem> cartItems = savedUser.getListCartItems();
+             CartItem lastItem = cartItems.get(cartItems.size() - 1);
+             return ResponseEntity.ok(lastItem.getIdCart());
+         }
+
+         return ResponseEntity.ok().build();
+
+     } catch (Exception e) {
+         e.printStackTrace();
+         return ResponseEntity.badRequest().body("Lỗi khi lưu giỏ hàng");
+     }
+ }
 
     @Override
     public ResponseEntity<?> update(JsonNode jsonNode) {

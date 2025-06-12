@@ -33,7 +33,15 @@ public class ReviewController {
     public ReviewController(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
-
+    @GetMapping("/get-all-reviews")
+    public ResponseEntity<?> getAllReviews() {
+        try {
+            return ResponseEntity.ok(reviewRepository.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
     @PostMapping("/add-review")
     public ResponseEntity<?> save(@RequestBody JsonNode jsonNode) {
         try{
@@ -113,7 +121,7 @@ public class ReviewController {
     public ResponseEntity<?> getReview(@RequestBody JsonNode jsonNode) {
         try{
             int idOrder = Integer.parseInt(formatStringByJson(String.valueOf(jsonNode.get("idOrder"))));
-            int idBook = Integer.parseInt(formatStringByJson(String.valueOf(jsonNode.get("idBook"))));
+
             int idPlasticItem = Integer.parseInt(formatStringByJson(String.valueOf(jsonNode.get("idPlasticItem"))));
             Order order = orderRepository.findById(idOrder).get();
             PlasticItem plasticItem = plasticItemReposiroty.findById(idPlasticItem).get();

@@ -9,4 +9,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
     public  Review findReviewByOrderDetail(OrderDetail orderDetail);
     // Define any custom query methods if needed
+    public long countBy();
 }

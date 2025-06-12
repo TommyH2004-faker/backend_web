@@ -4,17 +4,25 @@ public class Endpoints {
     public static final String front_end_host = "http://localhost:3000";
     public static final String[] PUBLIC_GET_ENDPOINS = {
             "/images",
+            "/users",
+            "/users/**",
+            "/users/*",
+            "/reviews/get-all-reviews",
             "/genres/**",
+            "/genres/*",
             "/plastic",
+            "/plastic-items",
+            "/plastic-items/**",
+            "/plastic-items/*",
             "/plastic/**",
             "/orders/**",
             "/order/**",
-            "review/search/countBy",
+            "reviews/search/countBy",
             "/feedback/totalFeedbacks",
             "/plastic/get-total",
             "/plastic/**",
             "/genre/**",
-            "/review/**",
+            "/reviews/**",
             "/images/**",
             "/images/**",
             "/users/search/existsByUsername/**",
@@ -42,10 +50,16 @@ public class Endpoints {
             "/vnpay/**",
             "/cart-item/**",
             "/cart-item/get-all",
-            "/cart-items/*/book",
+            "/cart-item/*/plastic",
             "/taikhoan/forgot-password",
             "/taikhoan/get-all-users",
             "/feedback/get-all-feedbacks",
+            "/cart-items",
+            "/cart-items/**",
+            "/cart-items/*",
+            "/feedback",
+            "/feedback/**",
+            "/feedback/*",
 
     };
 
@@ -55,7 +69,6 @@ public class Endpoints {
             "taikhoan/register/*",
             "/taikhoan/authenticate",
             "feedback/add-feedback",
-            "/cart-item/add-item",
             "taikhoan/authenticate",
             "taikhoan/**",
             "/orders/**",
@@ -75,6 +88,8 @@ public class Endpoints {
 
     public static final String[] PUBLIC_PUT_ENDPOINS = {
             "/cart-item/**",
+            "taikhoan/change-password",
+
             "/taikhoan/forgot-password",
             "/taikhoan/update-profile",
             "/user/**",
