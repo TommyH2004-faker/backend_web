@@ -57,9 +57,9 @@ public class Endpoints {
             "/cart-items",
             "/cart-items/**",
             "/cart-items/*",
-            "/feedback",
-            "/feedback/**",
-            "/feedback/*",
+            "/feedbacks",
+            "/feedbacks/**",
+            "/feedbacks/*",
 
     };
 
@@ -115,8 +115,6 @@ public class Endpoints {
             "/genres/**",
     };
     public static final String[] ADMIN_ENDPOINS = {
-            "/plastic",
-            "/plastic/**",
             "/users",
             "/users/**",
             "/favorite-plastic/get-favorite-plastic/**",
@@ -139,6 +137,8 @@ public class Endpoints {
             "feedback/add-feedback",
             "/taikhoan/forgot-password",
             "/**",
+            "/api/image/upload",
+
 
     };
 

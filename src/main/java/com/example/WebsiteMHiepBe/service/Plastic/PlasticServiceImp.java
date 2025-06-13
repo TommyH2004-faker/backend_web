@@ -45,8 +45,87 @@ public class PlasticServiceImp implements PlasticService{
 
 
 
-
     @Override
+    @Transactional
+    public ResponseEntity<?> update(JsonNode plasticJson) {
+        try {
+            // Convert JSON to PlasticItem object
+            PlasticItem plasticItem = objectMapper.treeToValue(plasticJson, PlasticItem.class);
+            List<Image> imageList = imageRepository.findImageByPlasticItem(plasticItem);
+            // luu the loai cua plastic
+            List<Integer> idGenreList = objectMapper.readValue(plasticJson.get("idGenres").traverse(), new TypeReference<List<Integer>>() {
+            });
+            List<Genre> genreList = new ArrayList<>();
+            for (int idGenre : idGenreList) {
+                Optional<Genre> genre = genreRepository.findById(idGenre);
+                genre.ifPresent(genreList::add);
+            }
+            plasticItem.setListGenres(genreList);
+            // kiem tra xem thumnail thay doi khong
+            String dataThumbnail = formatStringByJson(String.valueOf(plasticJson.get("thumbnail")));
+            if(Base64ToMultipartFileConverter.isBase64(dataThumbnail)){
+                for(Image image : imageList){
+                    if(image.isThumbnail()){
+                        // xoa thumbnail cu
+                        MultipartFile multipartFile = Base64ToMultipartFileConverter.convert(dataThumbnail);
+                        String thumbnailUrl = uploadImageService.uploadImage(multipartFile, "Plastic_" + plasticItem.getIdPlasticItem());
+                        image.setUrlImage(thumbnailUrl);
+                        imageRepository.save(image);
+                        break;
+                    }
+                }
+            }
+            PlasticItem newPlasticItem = plasticItemReposiroty.save(plasticItem);
+            List<String> arrRelatedImg = objectMapper.readValue(
+                    formatStringByJson(String.valueOf(plasticJson.get("relatedImg"))),
+                    new TypeReference<List<String>>() {}
+            );
+            boolean isCheckDelete = true;
+            for(String img : arrRelatedImg){
+                if(!Base64ToMultipartFileConverter.isBase64(img)){
+                    isCheckDelete = false;
+
+                }
+            }
+            if(isCheckDelete){
+                imageRepository.deleteIImagesWithFalseThumnailByPlaticId(newPlasticItem.getIdPlasticItem());
+                Image thumnailTemp = imageList.get(0);
+                imageList.clear();
+                imageList.add(thumnailTemp);
+                for (int i = 0; i < arrRelatedImg.size(); i++) {
+                    String imgData = arrRelatedImg.get(i);
+                    Image image = new Image();
+                    image.setPlasticItem(newPlasticItem);
+                    image.setThumbnail(false);
+                    MultipartFile relatedImgFile = Base64ToMultipartFileConverter.convert(imgData);
+                    String url = uploadImageService.uploadImage(relatedImgFile, "Plastic_" + newPlasticItem.getIdPlasticItem() + "." + i);
+                    image.setUrlImage(url);
+                    imageList.add(image);
+                }
+            }else {
+                // neu khong xoa anh lien quan
+                for (int i = 0; i < arrRelatedImg.size(); i++) {
+                    String imgData = arrRelatedImg.get(i);
+                    if (Base64ToMultipartFileConverter.isBase64(imgData)) {
+                        Image image = new Image();
+                        image.setPlasticItem(newPlasticItem);
+                        image.setThumbnail(false);
+                        MultipartFile relatedImgFile = Base64ToMultipartFileConverter.convert(imgData);
+                        String url = uploadImageService.uploadImage(relatedImgFile, "Plastic_" + newPlasticItem.getIdPlasticItem() + "." + i);
+                        image.setUrlImage(url);
+                        imageRepository.save(image);
+                    }
+                }
+            }
+            newPlasticItem.setListImages(imageList);
+
+            plasticItemReposiroty.save(newPlasticItem);
+            return ResponseEntity.ok("Update plastic item success!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error updating plastic item: " + e.getMessage());
+        }
+    }
+  /*  @Override
     @Transactional
     public ResponseEntity<?> update(JsonNode plasticJson) {
         try {
@@ -125,7 +204,7 @@ public class PlasticServiceImp implements PlasticService{
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error updating plastic item: " + e.getMessage());
         }
-    }
+    }*/
     @Override
     @Transactional
     public ResponseEntity<?> save(JsonNode plasticJson) {

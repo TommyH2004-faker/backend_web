@@ -39,15 +39,7 @@ public class FeedbackController {
         }
         return ResponseEntity.ok("Thành công");
     }
-    @GetMapping("/get-all-feedbacks")
-    public ResponseEntity<?> getAllFeedbacks() {
-        try {
-            return ResponseEntity.ok(feedBackRepository.findAll());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
-    }
+
     @PostMapping("/add-feedback")
     public ResponseEntity<?> add(@RequestBody JsonNode jsonData) {
         try {
