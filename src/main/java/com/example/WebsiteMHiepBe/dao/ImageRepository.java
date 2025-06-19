@@ -13,6 +13,7 @@ import java.util.List;
 
 @RepositoryRestResource(path = "images")
 public interface ImageRepository extends JpaRepository<Image, Integer> {
+     void deleteAllByPlasticItem(PlasticItem plasticItem);
 
 
      public  List<Image> findImageByPlasticItem(PlasticItem plasticItem);

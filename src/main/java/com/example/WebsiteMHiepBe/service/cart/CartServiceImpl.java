@@ -8,6 +8,7 @@ import com.example.WebsiteMHiepBe.entity.PlasticItem;
 import com.example.WebsiteMHiepBe.entity.User;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -130,6 +131,7 @@ private final ObjectMapper objectMapper ;
      }
  }*/
 @Override
+@Transactional
 public ResponseEntity<?> save(JsonNode jsonNode) {
     try {
         int idUser = 0;

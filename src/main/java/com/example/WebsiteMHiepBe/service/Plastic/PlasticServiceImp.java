@@ -7,8 +7,7 @@ import com.example.WebsiteMHiepBe.entity.Genre;
 import com.example.WebsiteMHiepBe.entity.Image;
 import com.example.WebsiteMHiepBe.entity.PlasticItem;
 import com.example.WebsiteMHiepBe.service.UploadImage.UploadImageService;
-import com.example.WebsiteMHiepBe.utils.Base64ToMultipartFileConverter;
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -43,218 +42,126 @@ public class PlasticServiceImp implements PlasticService{
     }
 
 
-
-
-    @Override
-    @Transactional
-    public ResponseEntity<?> update(JsonNode plasticJson) {
-        try {
-            // Convert JSON to PlasticItem object
-            PlasticItem plasticItem = objectMapper.treeToValue(plasticJson, PlasticItem.class);
-            List<Image> imageList = imageRepository.findImageByPlasticItem(plasticItem);
-            // luu the loai cua plastic
-            List<Integer> idGenreList = objectMapper.readValue(plasticJson.get("idGenres").traverse(), new TypeReference<List<Integer>>() {
-            });
-            List<Genre> genreList = new ArrayList<>();
-            for (int idGenre : idGenreList) {
-                Optional<Genre> genre = genreRepository.findById(idGenre);
-                genre.ifPresent(genreList::add);
-            }
-            plasticItem.setListGenres(genreList);
-            // kiem tra xem thumnail thay doi khong
-            String dataThumbnail = formatStringByJson(String.valueOf(plasticJson.get("thumbnail")));
-            if(Base64ToMultipartFileConverter.isBase64(dataThumbnail)){
-                for(Image image : imageList){
-                    if(image.isThumbnail()){
-                        // xoa thumbnail cu
-                        MultipartFile multipartFile = Base64ToMultipartFileConverter.convert(dataThumbnail);
-                        String thumbnailUrl = uploadImageService.uploadImage(multipartFile, "Plastic_" + plasticItem.getIdPlasticItem());
-                        image.setUrlImage(thumbnailUrl);
-                        imageRepository.save(image);
-                        break;
-                    }
-                }
-            }
-            PlasticItem newPlasticItem = plasticItemReposiroty.save(plasticItem);
-            List<String> arrRelatedImg = objectMapper.readValue(
-                    formatStringByJson(String.valueOf(plasticJson.get("relatedImg"))),
-                    new TypeReference<List<String>>() {}
-            );
-            boolean isCheckDelete = true;
-            for(String img : arrRelatedImg){
-                if(!Base64ToMultipartFileConverter.isBase64(img)){
-                    isCheckDelete = false;
-
-                }
-            }
-            if(isCheckDelete){
-                imageRepository.deleteIImagesWithFalseThumnailByPlaticId(newPlasticItem.getIdPlasticItem());
-                Image thumnailTemp = imageList.get(0);
-                imageList.clear();
-                imageList.add(thumnailTemp);
-                for (int i = 0; i < arrRelatedImg.size(); i++) {
-                    String imgData = arrRelatedImg.get(i);
-                    Image image = new Image();
-                    image.setPlasticItem(newPlasticItem);
-                    image.setThumbnail(false);
-                    MultipartFile relatedImgFile = Base64ToMultipartFileConverter.convert(imgData);
-                    String url = uploadImageService.uploadImage(relatedImgFile, "Plastic_" + newPlasticItem.getIdPlasticItem() + "." + i);
-                    image.setUrlImage(url);
-                    imageList.add(image);
-                }
-            }else {
-                // neu khong xoa anh lien quan
-                for (int i = 0; i < arrRelatedImg.size(); i++) {
-                    String imgData = arrRelatedImg.get(i);
-                    if (Base64ToMultipartFileConverter.isBase64(imgData)) {
-                        Image image = new Image();
-                        image.setPlasticItem(newPlasticItem);
-                        image.setThumbnail(false);
-                        MultipartFile relatedImgFile = Base64ToMultipartFileConverter.convert(imgData);
-                        String url = uploadImageService.uploadImage(relatedImgFile, "Plastic_" + newPlasticItem.getIdPlasticItem() + "." + i);
-                        image.setUrlImage(url);
-                        imageRepository.save(image);
-                    }
-                }
-            }
-            newPlasticItem.setListImages(imageList);
-
-            plasticItemReposiroty.save(newPlasticItem);
-            return ResponseEntity.ok("Update plastic item success!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error updating plastic item: " + e.getMessage());
-        }
-    }
-  /*  @Override
-    @Transactional
-    public ResponseEntity<?> update(JsonNode plasticJson) {
-        try {
-            // Convert JSON to PlasticItem object
-            PlasticItem plasticItem = objectMapper.treeToValue(plasticJson, PlasticItem.class);
-            List<Image> imageList = imageRepository.findImageByPlasticItem(plasticItem);
-            // luu the loai cua plastic
-            List<Integer> idGenreList = objectMapper.readValue(plasticJson.get("idGenres").traverse(), new TypeReference<List<Integer>>() {
-            });
-            List<Genre> genreList = new ArrayList<>();
-            for (int idGenre : idGenreList) {
-                Optional<Genre> genre = genreRepository.findById(idGenre);
-                genre.ifPresent(genreList::add);
-            }
-            plasticItem.setListGenres(genreList);
-            // kiem tra xem thumnail thay doi khong
-            String dataThumbnail = formatStringByJson(String.valueOf(plasticJson.get("thumbnail")));
-            if(Base64ToMultipartFileConverter.isBase64(dataThumbnail)){
-                for(Image image : imageList){
-                    if(image.isThumbnail()){
-                        // xoa thumbnail cu
-                        MultipartFile multipartFile = Base64ToMultipartFileConverter.convert(dataThumbnail);
-                        String thumbnailUrl = uploadImageService.uploadImage(multipartFile, "Plastic_" + plasticItem.getIdPlasticItem());
-                        image.setUrlImage(thumbnailUrl);
-                        imageRepository.save(image);
-                        break;
-                    }
-                }
-            }
-            PlasticItem newPlasticItem = plasticItemReposiroty.save(plasticItem);
-            List<String> arrRelatedImg = objectMapper.readValue(
-                    formatStringByJson(String.valueOf(plasticJson.get("relatedImg"))),
-                    new TypeReference<List<String>>() {}
-            );
-            boolean isCheckDelete = true;
-            for(String img : arrRelatedImg){
-                if(!Base64ToMultipartFileConverter.isBase64(img)){
-                    isCheckDelete = false;
-
-                }
-            }
-            if(isCheckDelete){
-                imageRepository.deleteIImagesWithFalseThumnailByPlaticId(newPlasticItem.getIdPlasticItem());
-                Image thumnailTemp = imageList.get(0);
-                imageList.clear();
-                imageList.add(thumnailTemp);
-                for (int i = 0; i < arrRelatedImg.size(); i++) {
-                    String imgData = arrRelatedImg.get(i);
-                   Image image = new Image();
-                   image.setPlasticItem(newPlasticItem);
-                   image.setThumbnail(false);
-                   MultipartFile relatedImgFile = Base64ToMultipartFileConverter.convert(imgData);
-                     String url = uploadImageService.uploadImage(relatedImgFile, "Plastic_" + newPlasticItem.getIdPlasticItem() + "." + i);
-                     image.setUrlImage(url);
-                     imageList.add(image);
-                }
-            }else {
-                // neu khong xoa anh lien quan
-                for (int i = 0; i < arrRelatedImg.size(); i++) {
-                    String imgData = arrRelatedImg.get(i);
-                    if (Base64ToMultipartFileConverter.isBase64(imgData)) {
-                        Image image = new Image();
-                        image.setPlasticItem(newPlasticItem);
-                        image.setThumbnail(false);
-                        MultipartFile relatedImgFile = Base64ToMultipartFileConverter.convert(imgData);
-                        String url = uploadImageService.uploadImage(relatedImgFile, "Plastic_" + newPlasticItem.getIdPlasticItem() + "." + i);
-                        image.setUrlImage(url);
-                        imageRepository.save(image);
-                    }
-                }
-            }
-            newPlasticItem.setListImages(imageList);
-
-            plasticItemReposiroty.save(newPlasticItem);
-            return ResponseEntity.ok("Update plastic item success!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error updating plastic item: " + e.getMessage());
-        }
-    }*/
     @Override
     @Transactional
     public ResponseEntity<?> save(JsonNode plasticJson) {
         try {
+            // Parse thông tin từ JSON thành object PlasticItem
             PlasticItem plasticItem = objectMapper.treeToValue(plasticJson, PlasticItem.class);
 
-
-            // Lưu thể loại
-            List<Integer> idGenreList = objectMapper.readValue(plasticJson.get("idGenres").traverse(), new TypeReference<List<Integer>>() {
-            });
-            List<Genre> genreList = new ArrayList<>();
-            for (int idGenre : idGenreList) {
-                Optional<Genre> genre = genreRepository.findById(idGenre);
-                genreList.add(genre.get());
-            }
+            // Parse danh sách ID thể loại
+            List<Integer> idGenreList = objectMapper.readValue(
+                    plasticJson.get("idGenres").traverse(),
+                    new TypeReference<List<Integer>>() {}
+            );
+            List<Genre> genreList = genreRepository.findAllById(idGenreList);
             plasticItem.setListGenres(genreList);
 
-            PlasticItem plasticItemNew = plasticItemReposiroty.save(plasticItem);
-            // Lưu thumbnail cho ảnh
-            String dataThumbnail = formatStringByJson(String.valueOf(plasticJson.get("thumbnail")));
-            Image thumnail = new Image();
-            thumnail.setPlasticItem(plasticItemNew);
-            thumnail.setThumbnail(true);
-            MultipartFile multipartFile = Base64ToMultipartFileConverter.convert(dataThumbnail);
-            String thumbnailUrl = uploadImageService.uploadImage(multipartFile, "Plastic_" + plasticItemNew.getIdPlasticItem());
-            thumnail.setUrlImage(thumbnailUrl);
-            List<Image> imagesList = new ArrayList<>();
-            imagesList.add(thumnail);
-            // Lưu các ảnh liên quan
-            String relatedImg = formatStringByJson(String.valueOf(plasticJson.get("relatedImg")));
-            List<String> relatedImgs = objectMapper.readValue(relatedImg, new TypeReference<List<String>>() {});
-            for (int i = 0; i < relatedImgs.size(); i++) {
-                String imgData = relatedImgs.get(i);
-                MultipartFile imgFile = Base64ToMultipartFileConverter.convert(imgData);
-                String url = uploadImageService.uploadImage(imgFile, "Plastic_" + plasticItemNew.getIdPlasticItem() + "." + i);
+            // Lưu trước plastic để lấy ID
+            PlasticItem savedPlastic = plasticItemReposiroty.save(plasticItem);
 
+            // Parse ảnh thumbnail
+            String thumbnailUrl = plasticJson.get("thumbnail").asText();
+            Image thumbnail = new Image();
+            thumbnail.setPlasticItem(savedPlastic);
+            thumbnail.setThumbnail(true);
+            thumbnail.setUrlImage(thumbnailUrl);
+
+            // Parse ảnh liên quan
+            List<String> relatedImgUrls = objectMapper.readValue(
+                    plasticJson.get("relatedImg").traverse(),
+                    new TypeReference<List<String>>() {}
+            );
+
+            List<Image> allImages = new ArrayList<>();
+            allImages.add(thumbnail);
+
+            for (String url : relatedImgUrls) {
                 Image image = new Image();
-                image.setPlasticItem(plasticItemNew);
+                image.setPlasticItem(savedPlastic);
                 image.setThumbnail(false);
                 image.setUrlImage(url);
-                imagesList.add(image);
+                allImages.add(image);
             }
-            plasticItemNew.setListImages(imagesList);
-            // cap nhat lai plastic item
-            plasticItemReposiroty.save(plasticItemNew);
-            return ResponseEntity.ok("Update plastic item success!");
+
+            // Gán danh sách ảnh
+            savedPlastic.setListImages(allImages);
+
+            // Lưu lại lần cuối
+            plasticItemReposiroty.save(savedPlastic);
+
+            return ResponseEntity.ok("Thêm plastic thành công!");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Lỗi khi thêm plastic: " + e.getMessage());
         }
     }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> update(JsonNode plasticJson) {
+        try {
+            // Parse object
+            PlasticItem plasticItem = objectMapper.treeToValue(plasticJson, PlasticItem.class);
+
+            // Parse genres
+            List<Integer> idGenreList = objectMapper.readValue(plasticJson.get("idGenres").traverse(), new TypeReference<>() {});
+            List<Genre> genreList = genreRepository.findAllById(idGenreList);
+            plasticItem.setListGenres(genreList);
+
+            // Lấy lại entity từ DB (giữ ID cũ & ảnh cũ)
+            Optional<PlasticItem> existingOpt = plasticItemReposiroty.findById(plasticItem.getIdPlasticItem());
+            if (existingOpt.isEmpty()) return ResponseEntity.notFound().build();
+            PlasticItem existing = existingOpt.get();
+
+            // Xóa ảnh cũ
+            imageRepository.deleteAllByPlasticItem(existing);
+
+            // Parse ảnh mới
+            String thumbnailUrl = plasticJson.get("thumbnail").asText();
+            List<String> relatedImgUrls = objectMapper.readValue(plasticJson.get("relatedImg").traverse(), new TypeReference<>() {});
+
+            List<Image> newImages = new ArrayList<>();
+
+            Image thumbnail = new Image();
+            thumbnail.setPlasticItem(existing);
+            thumbnail.setThumbnail(true);
+            thumbnail.setUrlImage(thumbnailUrl);
+            newImages.add(thumbnail);
+
+            for (String url : relatedImgUrls) {
+                Image img = new Image();
+                img.setPlasticItem(existing);
+                img.setThumbnail(false);
+                img.setUrlImage(url);
+                newImages.add(img);
+            }
+
+            // Gán lại danh sách ảnh và genres
+            existing.setListImages(newImages);
+            existing.setListGenres(genreList);
+
+            // Gán các thông tin cập nhật
+            existing.setNamePlasticItem(plasticItem.getNamePlasticItem());
+            existing.setManufacturer(plasticItem.getManufacturer());
+            existing.setDescription(plasticItem.getDescription());
+            existing.setListPrice(plasticItem.getListPrice());
+            existing.setSellPrice(plasticItem.getSellPrice());
+            existing.setQuantity(plasticItem.getQuantity());
+            existing.setAvgRating(plasticItem.getAvgRating());
+            existing.setSoldQuantity(plasticItem.getSoldQuantity());
+            existing.setDiscountPercent(plasticItem.getDiscountPercent());
+
+            // Lưu
+            plasticItemReposiroty.save(existing);
+
+            return ResponseEntity.ok("Cập nhật plastic thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Lỗi khi cập nhật plastic: " + e.getMessage());
+        }
+    }
+
 
     @Override
     public long getTotalPlastic() {

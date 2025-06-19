@@ -82,6 +82,9 @@ public class Endpoints {
             "cart-item/add-item",
             "/cart-item/add-item/**",
             "taikhoan/add-user",
+            "/plastics/upload-images",
+            "plastics/upload-images",
+
 
     };
 
