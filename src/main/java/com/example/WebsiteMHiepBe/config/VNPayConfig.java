@@ -12,7 +12,7 @@ public class VNPayConfig {
 //    public static String vnp_ReturnUrl = "http://localhost:8080/vnpay/payment_info";
     public static String vnp_ReturnUrl = "http://localhost:3000/check-out/status";
     public static String vnp_TmnCode = "2JJUPZ1H";
-    public static String secretKey = "S6IQL21EDF2QGYF56FXPA44D2S8WAZ28";
+    public static String secretKey = "9MZ6IVE63GVP6F4U21SIVVALXPBQJAGR";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
