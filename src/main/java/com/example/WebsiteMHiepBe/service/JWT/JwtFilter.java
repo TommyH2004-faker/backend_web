@@ -11,9 +11,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -43,5 +46,26 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request,response); // chuyen tiep request
+    }
+    private static final List<String> EXCLUDED_URLS = Arrays.asList(
+            "/plastic-items",
+            "/plastic-items/**",
+            "/images/**",
+            "/users/**",
+            "/taikhoan/**",
+            "/vnpay/**",
+            "/feedback/**",
+            "/cart-item/**",
+            "/genres/**",
+            "/reviews/**"
+
+    );
+
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return EXCLUDED_URLS.stream().anyMatch(p -> pathMatcher.match(p, path));
     }
 }
