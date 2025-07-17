@@ -1,7 +1,8 @@
 package com.example.WebsiteMHiepBe.security;
 
 public class Endpoints {
-    public static final String front_end_host = "http://localhost:3000";
+    public static final String front_end_host = "https://frontend-web-murex.vercel.app";
+    public static final String front_end_host1 = "http://localhost:3000";
     public static final String[] PUBLIC_GET_ENDPOINS = {
             "/images",
             "/users",
