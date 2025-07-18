@@ -42,6 +42,7 @@ public class SecutiryConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(
                 config -> config
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, Endpoints.PUBLIC_GET_ENDPOINS).permitAll()
                         .requestMatchers(HttpMethod.POST, Endpoints.PUBLIC_POST_ENDPOINS).permitAll()
                         .requestMatchers(HttpMethod.PUT, Endpoints.PUBLIC_PUT_ENDPOINS).permitAll()
@@ -68,7 +69,7 @@ public class SecutiryConfiguration {
         http.cors(cors -> {
             cors.configurationSource(request -> {
                 CorsConfiguration corsConfig = new CorsConfiguration();
-                corsConfig.setAllowedOrigins(Arrays.asList(Endpoints.front_end_host)); // dùng set, không dùng add
+                corsConfig.setAllowedOrigins(Arrays.asList(Endpoints.front_end_host,Endpoints.front_end_host1)); // dùng set, không dùng add
                 corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 corsConfig.setAllowedHeaders(Arrays.asList("*"));
                 corsConfig.setAllowCredentials(true); // BẮT BUỘC nếu dùng JWT / cookie
