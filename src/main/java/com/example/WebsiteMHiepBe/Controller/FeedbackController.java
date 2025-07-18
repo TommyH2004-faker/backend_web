@@ -14,6 +14,7 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
+@CrossOrigin(origins = "https://frontend-web-murex.vercel.app")
 
 @RestController
 @RequestMapping("/feedback")

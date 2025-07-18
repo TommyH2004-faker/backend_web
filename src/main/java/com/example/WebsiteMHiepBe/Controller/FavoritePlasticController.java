@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+@CrossOrigin(origins = "https://frontend-web-murex.vercel.app")
 
 @RestController
 @RequestMapping("/favorite-plastic")

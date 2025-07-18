@@ -16,9 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+@CrossOrigin(origins = "https://frontend-web-murex.vercel.app")
 @RestController
-@CrossOrigin()
+
 @RequestMapping("/taikhoan")
 public class TaiKhoanController {
     @Autowired

@@ -15,7 +15,8 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/vnpay")
-@CrossOrigin("*")
+@CrossOrigin(origins = "https://frontend-web-murex.vercel.app")
+
 public class VNPayController {
     @PostMapping("/create-payment")
     public ResponseEntity<?> createPayment(HttpServletRequest request, @RequestParam("amount") long amountRequest) throws UnsupportedEncodingException {
