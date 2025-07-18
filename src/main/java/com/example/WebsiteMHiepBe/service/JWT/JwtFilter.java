@@ -54,10 +54,20 @@ public class JwtFilter extends OncePerRequestFilter {
             "/users/**",
             "/taikhoan/**",
             "/vnpay/**",
-            "/feedback/**",
-            "/cart-item/**",
+            "/feedbacks/**",
+            "/cart-items/**",
             "/genres/**",
-            "/reviews/**"
+            "/reviews/**",
+            "/deliveries/**",
+            "/roles/**",
+            "/images/**",
+            "/orders/**",
+            "/payments/**",
+            "/order-details/**",
+            "/favorite-items/**"
+
+
+
 
     );
 
