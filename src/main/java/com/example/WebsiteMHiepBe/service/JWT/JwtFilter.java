@@ -3,6 +3,8 @@ package com.example.WebsiteMHiepBe.service.JWT;
 import com.example.WebsiteMHiepBe.utils.UserSecurityService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,9 +75,18 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    @Override
+/*    @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
         return EXCLUDED_URLS.stream().anyMatch(p -> pathMatcher.match(p, path));
+    }*/
+@Override
+protected boolean shouldNotFilter(HttpServletRequest request) {
+    if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        return true; // Bỏ qua filter cho các preflight request
     }
+    String path = request.getServletPath();
+    return EXCLUDED_URLS.stream().anyMatch(p -> pathMatcher.match(p, path));
+}
+
 }
