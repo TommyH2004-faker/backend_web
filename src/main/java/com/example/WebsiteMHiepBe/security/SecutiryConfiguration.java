@@ -55,7 +55,7 @@ public class SecutiryConfiguration {
 
 
         );
-        http.cors(cors -> {
+        /*http.cors(cors -> {
             cors.configurationSource(request -> {
                 CorsConfiguration corsConfig = new CorsConfiguration();
                 corsConfig.addAllowedOrigin(Endpoints.front_end_host);
@@ -63,7 +63,21 @@ public class SecutiryConfiguration {
                 corsConfig.addAllowedHeader("*");
                 return corsConfig;
             });
+        });*/
+
+        http.cors(cors -> {
+            cors.configurationSource(request -> {
+                CorsConfiguration corsConfig = new CorsConfiguration();
+                corsConfig.setAllowedOrigins(Arrays.asList(Endpoints.front_end_host)); // dùng set, không dùng add
+                corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                corsConfig.setAllowedHeaders(Arrays.asList("*"));
+                corsConfig.setAllowCredentials(true); // BẮT BUỘC nếu dùng JWT / cookie
+                return corsConfig;
+            });
         });
+
+
+
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);// add filter
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // khong luu trang thai
