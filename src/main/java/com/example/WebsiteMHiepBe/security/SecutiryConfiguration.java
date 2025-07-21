@@ -205,9 +205,14 @@ public class SecutiryConfiguration {
                 Endpoints.front_end_host,
                 Endpoints.front_end_host1
         ));
+
+
+
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true); // Bắt buộc nếu dùng cookie hoặc token
+        configuration.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
